@@ -24,60 +24,23 @@ namespace CreateSeminarApp.Utils
         private void InitializeMenu()
         {
             var addHeaderMenuItem = new ToolStripMenuItem("Add Header");
-            addHeaderMenuItem.Click += AddHeaderMenuItem_Click;
+            addHeaderMenuItem.Click += (sender, e) => mainForm.showInputControls("Header");
             
             var addTitleMenuItem = new ToolStripMenuItem("Add Title");
-            addTitleMenuItem.Click += AddTitleMenuItem_Click;
+            addTitleMenuItem.Click += (sender, e) => mainForm.showInputControls("Title"); 
 
             var addFooterMenuItem = new ToolStripMenuItem("Add Footer");
-            addFooterMenuItem.Click += AddFooterMenuItem_Click;
+            addFooterMenuItem.Click += (sender, e) => mainForm.showInputControls("Footer");
 
-            var addTextMenuItem = new ToolStripMenuItem("Add Text");
-            addTextMenuItem.Click += AddTextMenuItem_Click;
+            var addParagraphMenuItem = new ToolStripMenuItem("Add Paragraph");
+            addParagraphMenuItem.Click += (sender, e) => mainForm.showInputControls("Paragraph");
 
             this.Items.Add(addHeaderMenuItem);
             this.Items.Add(addTitleMenuItem);
             this.Items.Add(addFooterMenuItem);
-            this.Items.Add(addTextMenuItem);
+            this.Items.Add(addParagraphMenuItem);
         }
 
-        private void AddTextMenuItem_Click(object? sender, EventArgs e)
-        {
-            ShowInputControls("Text");
-        }
-
-        private void AddFooterMenuItem_Click(object? sender, EventArgs e)
-        {
-            ShowInputControls("Footer");
-        }
-
-        private void AddTitleMenuItem_Click(object? sender, EventArgs e)
-        {
-            ShowInputControls("Title");
-        }
-
-        private void AddHeaderMenuItem_Click(object? sender, EventArgs e)
-        {
-            ShowInputControls("Header");
-        }
-
-        private void ShowInputControls(string contentType)
-        {
-            mainForm.Controls.Clear();
-
-            TextBox inputText = new TextBox{PlaceholderText = $"Enter {contentType}",Width=200};
-            ListBox previousItemsList=new ListBox { Width = 200 };
-            SaveButton saveButton = new SaveButton(contentType) { Text=$"Save {contentType}"};
-
-            mainForm.Controls.Add(saveButton);
-            mainForm.Controls.Add(previousItemsList);
-            mainForm.Controls.Add(inputText);
-
-            inputText.Location = new System.Drawing.Point(10, 50);
-            previousItemsList.Location = new System.Drawing.Point(10, 90);
-            saveButton.Location = new System.Drawing.Point(10, 150);
-
-        }
     }
 }
 

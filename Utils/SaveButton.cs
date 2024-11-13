@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Schema;
 using Xceed.Words.NET;
 
 namespace CreateSeminarApp.Utils
@@ -10,9 +11,12 @@ namespace CreateSeminarApp.Utils
 
     public class SaveButton : Button
     {
-        private string contentType;
-        private TextBox inputText;
-        private ListBox savedItemsList;
+        private TextBox hederInput;
+        private TextBox footerInput;
+        private TextBox titleInput;
+        private TextBox paragraphInput;
+        //private ListBox savedItemsList; this will be in future
+        private string contentType { get; set; }="Text";
 
         public SaveButton()
         {
@@ -21,11 +25,13 @@ namespace CreateSeminarApp.Utils
             this.BackColor = Color.Green;
         }
 
-        public SaveButton(string contentType, TextBox inputText, ListBox savedItemsList)
+        public SaveButton(string contentType, TextBox hederInput, TextBox footerInput, TextBox titleInput, TextBox paragraphInput)
         {
             this.contentType = contentType;
-            this.inputText = inputText;
-            this.savedItemsList = savedItemsList;
+            this.hederInput = hederInput;
+            this.footerInput = footerInput;
+            this.titleInput = titleInput;
+            this.paragraphInput = paragraphInput;
 
             this.Text = "Save "+ contentType;
             this.Width = 100;
@@ -35,83 +41,67 @@ namespace CreateSeminarApp.Utils
 
         }
 
-        //public SaveButton(string filePath, TextBox inputText, ContentType type)
-        //{
-        //    this.filePath = filePath;
-        //    this.inputText = inputText;
-        //    this.contentType = type;
-
-        //    this.Text = $"Save {type}";
-        //    this.Width = 100;
-        //    this.BackColor = Color.Green;
-
-        //    this.Click += SaveButton_Click;
-        //}
-
         private void SaveButton_Click(object sender, EventArgs e)
         {
-            string content = inputText.Text;
-
-            if (string.IsNullOrEmpty(content))
-            {
-                MessageBox.Show($"Please enter {contentType} text.");
-                return;
-            }
-
+            string content = GetContent();
             string filePath = @"C:\Users\Mirko\Desktop\seminarski.docx";
 
             if (!File.Exists(filePath)) {
                 using (var document = DocX.Create(filePath)) 
                 {
-                    SaveDocument(document, content);
+                    InsertContentToDocument(document, content);
+                    document.Save();
+                    MessageBox.Show($"Created a new document, and u added {contentType}");
+                }
+            }
+            else
+            {
+                using (var document = DocX.Load(filePath))
+                {
+                    InsertContentToDocument(document, content);
+                    document.Save();
+                    MessageBox.Show($"You added {contentType} to the document");
                 }
             }
         }
+
+
         private string GetContent()
         {
-            if (savedItemsList != null && savedItemsList.SelectedItem != null)
+            return contentType switch
             {
-                return savedItemsList.SelectedItem.ToString();
-            }
-
-            return inputText?.Text;
+                "Header" => hederInput.Text,
+                "Footer" => footerInput.Text,
+                "Title" => titleInput.Text,
+                "Paragraph" => paragraphInput.Text,
+                _ => string.Empty
+            };
         }
 
-        private void SaveDocument(string content)
+        private void InsertContentToDocument(DocX document, string content)
         {
-            if (!File.Exists(filePath))
+            document.DifferentFirstPage = true;
+            switch(contentType) 
             {
-                using (var document = DocX.Create(filePath))
-                {
-                    AddContentToDocument(document, content);
-                    document.Save();
-                    MessageBox.Show($"{contentType} updated in existing document.");
-                }
-            }
-        }
-
-        private void AddContentToDocument(DocX document,string content)
-        {
-            switch (contentType)
-            {
-                case ContentType.Header:
+                case "Header":
                     document.AddHeaders();
-                    document.Headers.First.InsertParagraph(content);
+                    var firstPageHeader = document.Headers.First;
+                    firstPageHeader.InsertParagraph(content).Font("Times New Roman").FontSize(12);
                     break;
 
-                case ContentType.Footer:
+                case "Footer":
                     document.AddFooters();
-                    document.Footers.First.InsertParagraph(content);
+                    var firstPageFooter = document.Footers.First;
+                    firstPageFooter.InsertParagraph(content).Font("Times New Roman").FontSize(12);
                     break;
 
-                case ContentType.Title:
-                    document.InsertParagraph(content).FontSize(20).Bold().Alignment=Xceed.Document.NET.Alignment.center;
+                case "Title":
+                    document.InsertParagraph(content).Font("Times New Roman").FontSize(18);
                     break;
 
-                case ContentType.Text:
-                    document.InsertParagraph(content);
+                case "Paragraph":
+                    document.InsertParagraph(content).Font("Times New Roman").FontSize(12);
                     break;
             }
-        }
     }
 }
