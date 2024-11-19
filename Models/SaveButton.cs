@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CreateSeminarApp.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 using System.Xml.Schema;
 using Xceed.Words.NET;
 
-namespace CreateSeminarApp.Utils
+namespace CreateSeminarApp.Models
 {
 
     public class SaveButton : Button
@@ -16,14 +17,9 @@ namespace CreateSeminarApp.Utils
         private TextBox titleInput;
         private TextBox paragraphInput;
         //private ListBox savedItemsList; this will be in future
-        private string contentType { get; set; }="Text";
-
-        public SaveButton()
-        {
-            this.Text = "Save";
-            this.Width = 100;
-            this.BackColor = Color.Green;
-        }
+        Titles title;
+        public string contentType { get; set; } = "Text";
+        List<Titles> titles = new List<Titles>();
 
         public SaveButton(string contentType, TextBox hederInput, TextBox footerInput, TextBox titleInput, TextBox paragraphInput)
         {
@@ -33,11 +29,11 @@ namespace CreateSeminarApp.Utils
             this.titleInput = titleInput;
             this.paragraphInput = paragraphInput;
 
-            this.Text = "Save "+ contentType;
-            this.Width = 100;
-            this.BackColor = Color.Green;
+            Text = "Save " + contentType;
+            Width = 100;
+            BackColor = Color.Green;
 
-            this.Click += SaveButton_Click;
+            Click += SaveButton_Click;
 
         }
 
@@ -46,8 +42,9 @@ namespace CreateSeminarApp.Utils
             string content = GetContent();
             string filePath = @"C:\Users\Mirko\Desktop\seminarski.docx";
 
-            if (!File.Exists(filePath)) {
-                using (var document = DocX.Create(filePath)) 
+            if (!File.Exists(filePath))
+            {
+                using (var document = DocX.Create(filePath))
                 {
                     InsertContentToDocument(document, content);
                     document.Save();
@@ -81,7 +78,7 @@ namespace CreateSeminarApp.Utils
         private void InsertContentToDocument(DocX document, string content)
         {
             document.DifferentFirstPage = true;
-            switch(contentType) 
+            switch (contentType)
             {
                 case "Header":
                     document.AddHeaders();
@@ -96,12 +93,16 @@ namespace CreateSeminarApp.Utils
                     break;
 
                 case "Title":
-                    document.InsertParagraph(content).Font("Times New Roman").FontSize(18);
+                    document.InsertParagraph(content).Font("Times New Roman").FontSize(18).Bold().Alignment = Xceed.Document.NET.Alignment.center;
+                    title=new Titles(content);
+                    titles.Add(title);
+                    title.SaveData(titles);
                     break;
 
                 case "Paragraph":
                     document.InsertParagraph(content).Font("Times New Roman").FontSize(12);
                     break;
             }
+        }
     }
 }

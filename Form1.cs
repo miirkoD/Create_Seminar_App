@@ -1,4 +1,4 @@
-using CreateSeminarApp.Utils;
+using CreateSeminarApp.Models;
 using System;
 using System.Windows.Forms;
 
@@ -12,6 +12,7 @@ namespace CreateSeminarApp
         private TextBox titleInput = new TextBox { Visible = false };
         private TextBox paragraphInput = new TextBox { Visible = false };
         private SaveButton saveButton;
+        private ListBox titlesList;
         public Form1()
         {
             InitializeComponent();
@@ -61,7 +62,7 @@ namespace CreateSeminarApp
                 case "Paragraph":
                     paragraphInput.Visible = true; break;
             }
-            saveButton.ContentType=contentType;
+            saveButton.contentType = contentType;
             saveButton.Visible = true;
         }
     }
