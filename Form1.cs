@@ -12,7 +12,7 @@ namespace CreateSeminarApp
         private TextBox titleInput = new TextBox { Visible = false };
         private TextBox paragraphInput = new TextBox { Visible = false };
         private SaveButton saveButton;
-        private ListBox titlesList;
+        private ListBox titlesList=new ListBox { Visible=false};
         public Form1()
         {
             InitializeComponent();
@@ -29,15 +29,19 @@ namespace CreateSeminarApp
             this.MainMenuStrip = menu;
             this.Controls.Add(menu);
 
+            titlesList.Width = 150;
+
             headerInput.Location = new System.Drawing.Point(50, 100);
             footerInput.Location = new System.Drawing.Point(50, 100);
-            titleInput.Location = new System.Drawing.Point(50, 100);
+            titleInput.Location = new System.Drawing.Point(210, 100);
+            titlesList.Location=new System.Drawing.Point(50, 100);
             paragraphInput.Location = new System.Drawing.Point(50, 100);
 
             this.Controls.Add(headerInput);
             this.Controls.Add(footerInput);
             this.Controls.Add(titleInput);
             this.Controls.Add(paragraphInput);
+            this.Controls.Add(titlesList);
 
             saveButton = new SaveButton("Header", headerInput, footerInput, titleInput, paragraphInput)
             {
@@ -58,7 +62,8 @@ namespace CreateSeminarApp
                 case "Footer":
                     footerInput.Visible = true; break;
                 case "Title":
-                    titleInput.Visible = true; break;
+                    titleInput.Visible = true;
+                    titlesList.Visible = true; break;
                 case "Paragraph":
                     paragraphInput.Visible = true; break;
             }

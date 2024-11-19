@@ -28,7 +28,7 @@ namespace CreateSeminarApp.Models
             addHeaderMenuItem.Click += (sender, e) => mainForm.ShowInputControls("Header");
 
             var addTitleMenuItem = new ToolStripMenuItem("Add Title");
-            addTitleMenuItem.Click += (sender, e) => mainForm.ShowInputControls("Title");
+            addTitleMenuItem.Click += (sender, e) => mainForm.ShowInputControls("Title");//&& mainForm.ShowInputControls;
 
             var addFooterMenuItem = new ToolStripMenuItem("Add Footer");
             addFooterMenuItem.Click += (sender, e) => mainForm.ShowInputControls("Footer");
