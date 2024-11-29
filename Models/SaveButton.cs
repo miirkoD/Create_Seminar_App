@@ -31,7 +31,7 @@ namespace CreateSeminarApp.Models
 
             Text = "Save " + contentType;
             Width = 100;
-            BackColor = Color.Green;
+            BackColor = ColorTranslator.FromHtml("#006e69");
 
             Click += SaveButton_Click;
 
@@ -41,7 +41,7 @@ namespace CreateSeminarApp.Models
         {
             string content = GetContent();
             string filePath = @"C:\Users\Mirko\Desktop\seminarski.docx";
-
+            //kreiraj listu title i u nju dodjaj kontent kada udje i uf deo
             if (!File.Exists(filePath))
             {
                 using (var document = DocX.Create(filePath))

@@ -17,19 +17,33 @@ namespace CreateSeminarApp.Utils
         public Titles(string title)
         {
             this.title = title;
+            dateCreated = DateTime.Now;
         }
 
+        public static string GetFilePath()
+        {
+            string projectDirectory = Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.FullName;
+            string utilsFolder = Path.Combine(projectDirectory, "Utils");
+            if (!Directory.Exists(utilsFolder))
+            {
+                Directory.CreateDirectory(utilsFolder);
+            }
+            return Path.Combine(utilsFolder, "titles.json");
+        }
         public void SaveData(List<Titles> list)
         {
-            string json = JsonSerializer.Serialize(list[0].title);
-            File.WriteAllText("title.json",json);
+            string filePath=GetFilePath();
+            string json = JsonSerializer.Serialize(list,new JsonSerializerOptions { WriteIndented=true});
+            File.WriteAllText(filePath, json);
         }
 
-        public List<Titles> LoadData()
+        public static List<Titles> LoadData()
         {
-            if (File.Exists("title.json"))
+            string filePath=GetFilePath();
+
+            if (File.Exists(filePath))
             {
-                string json = File.ReadAllText("title.json");
+                string json = File.ReadAllText(filePath);
                 return JsonSerializer.Deserialize<List<Titles>>(json);
             }
             return new List<Titles>();
